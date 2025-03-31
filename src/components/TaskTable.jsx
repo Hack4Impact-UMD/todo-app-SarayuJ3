@@ -44,7 +44,7 @@ const TaskTable = ({ tasks, toggleCompletion, deleteTask }) => {
         You will need to change/implement the following:
         - The first TableCell's value should be the task's title
         - The second TableCell's value should be the task's description
-        - The second TableCell's value should be the task's dueDate
+        - The third TableCell's value should be the task's dueDate
         - For the Checkbox add:
           - A checked prop equal to the task's completed field (true/false)
           - An onChange prop equal to an ANONYMOUS ARROW FUNCTION that calls toggleCompletion()
@@ -54,7 +54,23 @@ const TaskTable = ({ tasks, toggleCompletion, deleteTask }) => {
             the task's id as a parameter.
         */}
         {tasks.map((task) => (
-          <p>REPLACE ME WITH YOUR ANSWER</p>
+          <TableRow key={task.id}>
+            <TableCell>{task.title}</TableCell>
+            <TableCell>{task.description}</TableCell>
+            <TableCell>{task.dueDate}</TableCell>
+            <TableCell>
+              <Checkbox
+                checked = {task.completed}
+                onChange = {() => {toggleCompletion(task.id);}}
+              />
+            </TableCell>
+            <TableCell>
+              <DeleteIcon
+                sx={{ color: red[500], "&:hover": { cursor: "pointer" } }}
+                onClick = {() => {deleteTask(task.id);}}
+              ></DeleteIcon>
+            </TableCell>
+          </TableRow>
         ))}
       </TableBody>
     </Table>

@@ -44,8 +44,23 @@ function App() {
   */
   const addTask = () => {
     // START EDITING
-    // END EDITING
+    if (title){
+      const newTask = {
+        id: uuidv4(),
+        title: title,
+        description: description,
+        completed: false, // Task should start as NOT COMPLETED
+        dueDate: dueDate,
+      };
+
+      setTasks(tasks => [...tasks, newTask]);
+      setTitle("")
+      setDescription("")
+      setDueDate("")
+    }
   };
+    
+    // END EDITING
 
   /*
     PROBLEM 3: The toggleCompletion function. This gets passed into the TaskTable and will be
@@ -61,9 +76,10 @@ function App() {
   */
   const toggleCompletion = (id) => {
     // START EDITING
+    setTasks(origTasks => origTasks.map((task => (task.id === id ? {...task, completed: !task.completed} : task))));
     // END EDITING
   };
-  
+
   /*
     PROBLEM 4: The deleteTask function. This gets passed into the TaskTable and will be
     used to allow the deletion of a given task.
@@ -77,7 +93,7 @@ function App() {
     HINT HINT NUDGE NUDGE: I'm getting some Week 4 HW flashbacks...are you?
   */
   const deleteTask = (id) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));  /* for some reason already done for me */
   };
   
   /*
@@ -97,8 +113,17 @@ function App() {
   */
   const calculateProgress = () => {
     // START EDITING
+    if (tasks.length === 0){
+      return 0;
+    }
+
+    const completedTaskCount = (tasks.filter((task) => task.completed));
+    const completedTasks = completedTaskCount.length;
+
+    return (completedTasks.length) / tasks.length *100;
     // END EDITING
-  };
+    }
+  
 
   return (
     <div id="main-container">
@@ -116,16 +141,28 @@ function App() {
         <TextField
           required
           label="Title"
+          value = {title}
+          onChange = {(e) => {
+            setTitle(e.target.value);
+          }}
         />
         <TextField
           label="Description"
+          value = {description}
+          onChange = {(e) => {
+            setDescription(e.target.value);
+          }}
         />
         <TextField
           label="Due Date"
           type="date"
           InputLabelProps={{ shrink: true }}
+          value = {dueDate}
+          onChange = {(e) => {
+            setDueDate(e.target.value);
+          }}
         />
-        <Button variant="contained">
+        <Button variant="contained" onClick={() => {addTask()}}>
           Add Task
         </Button>
       </div>
@@ -141,14 +178,15 @@ function App() {
       <LinearProgress
         variant="determinate"
         sx={{ width: "100%", height: 10, borderRadius: 5, marginBottom: 2 }}
+        value = {calculateProgress()}
       />
       <TaskTable 
         tasks={incompleteOnly ? tasks.filter((task) => !task.completed) : tasks } 
         toggleCompletion={toggleCompletion}
         deleteTask={deleteTask}
-      />
+      />  
     </div>
   );
-}
+};
 
 export default App;
